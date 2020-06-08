@@ -33,7 +33,38 @@ class TriviaTestCase(unittest.TestCase):
     TODO
     Write at least one test for each test for successful operation and for expected errors.
     """
+    def test_categories(self):
+        res = self.client().get('/categories')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data["success"], True)
+    
+    def test_error_create_question(self):
+        """Test POST a new question with missing category """
 
+        # Used as header to POST /question
+        json_create_question_error = {
+            'question' : 'Is this a test question?',
+            'answer' : 'Yes it is!',
+            'difficulty' : 1
+        } 
+
+        res = self.client().post('/questions', json = json_create_question_error)
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'Category can not be blank')
+    
+    def test_get_questions_from_category(self):
+        """Test GET all questions from selected category."""
+        res = self.client().get('/categories/1/questions')
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data['success'])
+        self.assertTrue(len(data['questions']) > 0)
+        self.assertTrue(data['total_questions'] > 0)
+        self.assertEqual(data['current_category'], '1')
 
 # Make the tests conveniently executable
 if __name__ == "__main__":

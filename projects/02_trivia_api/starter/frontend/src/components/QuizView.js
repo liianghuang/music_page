@@ -35,7 +35,7 @@ class QuizView extends Component {
     })
   }
 
-  selectCategory = ({type, id=0}) => {
+  selectCategory = ({type, id=1}) => {
     this.setState({quizCategory: {type, id}}, this.getNextQuestion)
   }
 
@@ -71,6 +71,7 @@ class QuizView extends Component {
         return;
       },
       error: (error) => {
+        console.log(error)
         alert('Unable to load question. Please try your request again')
         return;
       }
@@ -111,8 +112,8 @@ class QuizView extends Component {
                       key={id}
                       value={id}
                       className="play-category"
-                      onClick={() => this.selectCategory({type:this.state.categories[id], id})}>
-                      {this.state.categories[id]}
+                      onClick={() => this.selectCategory({type:this.state.categories[id-1], id})}>
+                      {this.state.categories[id-1]}
                     </div>
                   )
                 })}
